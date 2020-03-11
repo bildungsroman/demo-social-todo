@@ -14,30 +14,6 @@ Resources:
         - email
         - preferred_username
       UserPoolName: !Sub ${AWS::StackName}-UserPool
-      LambdaConfig:
-        PostAuthentication: !GetAtt Function2.Arn
-  Function2:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub ${AWS::StackName}-Function2
-      Description: !Sub
-        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
-        - ResourceName: Function2
-      CodeUri: src/Function2
-      Handler: index.handler
-      Runtime: nodejs12.x
-      MemorySize: 3008
-      Timeout: 30
-      Tracing: Active
-      Policies:
-        - AWSXrayWriteOnlyAccess
-  UserPoolToFunction2Permission:
-    Type: AWS::Lambda::Permission
-    Properties:
-      FunctionName: !GetAtt Function2.Arn
-      Principal: cognito-idp.amazonaws.com
-      Action: lambda:InvokeFunction
-      SourceArn: !GetAtt UserPool.Arn
   Api:
     Type: AWS::Serverless::Api
     Properties:
